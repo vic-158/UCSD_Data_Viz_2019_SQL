@@ -96,15 +96,36 @@ inner join film f on fa.film_id = f.film_id
 WHERE f.title = 'Alone Trip';
 
 -- 7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.
-
+SELECT cu.first_name, cu.last_name, cu.email, co.country FROM customer cu
+inner join address a on cu.address_id = a.address_id
+inner join city cy on a.city_id = cy.city_id
+inner join country co on cy.country_id = co.country_id
+WHERE co.country = 'Canada';
 
 -- 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+SELECT f.title, c.name FROM film f
+inner join film_category fc on f.film_id = fc.film_id
+inner join category c on fc.category_id = c.category_id
+WHERE c.name = 'Family';
 
 -- 7e. Display the most frequently rented movies in descending order.
+SELECT f.title, count(f.title) FROM film f
+inner join inventory i on f.film_id = i.film_id
+inner join rental r on i.inventory_id = r.inventory_id
+group by f.title
+order by count(f.title) desc;
 
 -- 7f. Write a query to display how much business, in dollars, each store brought in.
+SELECT sto.store_id, SUM(p.amount) FROM payment p
+inner join staff sta on p.staff_id = sta.staff_id
+inner join store sto on sta.store_id = sto.store_id
+group by sto.store_id;
 
 -- 7g. Write a query to display for each store its store ID, city, and country.
+SELECT sto.store_id, c.city, co.country FROM store sto
+inner join address a on sto.address_id = a.address_id
+inner join city c on a.city_id = c.city_id
+inner join country co on c.country_id = co.country_id;
 
 -- 7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
 
