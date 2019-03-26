@@ -128,13 +128,31 @@ inner join city c on a.city_id = c.city_id
 inner join country co on c.country_id = co.country_id;
 
 -- 7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+SELECT c.name, SUM(p.amount) FROM payment p
+inner join rental r on p.rental_id = r.rental_id
+inner join inventory i on r.inventory_id = i.inventory_id
+inner join film_category f on i.film_id = f.film_id
+inner join category c on f.category_id = c.category_id
+group by c.name
+order by SUM(p.amount) desc
+limit 5;
 
 -- 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+CREATE VIEW vTopFiveGenres AS
+SELECT c.name, SUM(p.amount) FROM payment p
+inner join rental r on p.rental_id = r.rental_id
+inner join inventory i on r.inventory_id = i.inventory_id
+inner join film_category f on i.film_id = f.film_id
+inner join category c on f.category_id = c.category_id
+group by c.name
+order by SUM(p.amount) desc
+limit 5;
 
 -- 8b. How would you display the view that you created in 8a?
+SELECT * FROM vTopFiveGenres;
 
 -- 8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
-
+DROP VIEW vTopFiveGenres;
 
 
 
